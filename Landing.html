@@ -1,0 +1,167 @@
+<!--
+FortiFi Landing Page (single HTML file)
+Instructions:
+- Save this content as `index.html` and open in a browser.
+- Replace images by clicking the image placeholders (they accept local files) or edit the <img> src attributes.
+- Edit text content (title, features, contact) directly in the HTML.
+- No build tools required. Mobile-responsive and accessible.
+
+Sections included:
+- Header with logo (click to replace) and nav
+- Hero with UVP and CTA
+- Key features
+- How it works (3 steps)
+- Pricing (simple tier)
+- Contact / Footer
+
+Author: ChatGPT
+-->
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FortiFi — Security Made Simple</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="description"
+        content="FortiFi — Plug-and-play WiFi security hub that protects your home and small business. Affordable, AI-powered, and easy to use." />
+
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <img src="assests/logo_bg.png" alt="FortiFi Logo" />
+        </div>
+        <nav>
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
+
+
+    <section class="hero">
+        <h2>Security Made Simple</h2>
+        <p>Protect your WiFi and data effortlessly with FortiFi’s plug-and-play smart cybersecurity hub.</p>
+        <a href="#contact" class="btn">Get Started</a>
+    </section>
+
+
+    <section id="features" class="features">
+        <h2>Key Features</h2>
+        <div class="feature-grid">
+            <div class="feature-item">
+                <img src="wifi-protection.jpg" alt="WiFi Protection" />
+                <h3>WiFi Protection</h3>
+                <p>Detects and blocks unauthorized access to your network.</p>
+            </div>
+            <div class="feature-item">
+                <img src="parental-control.jpg" alt="Parental Control" />
+                <h3>Parental Control</h3>
+                <p>Safeguard your kids online with customizable content filters.</p>
+            </div>
+            <div class="feature-item">
+                <img src="real-time-alerts.jpg" alt="Real-Time Alerts" />
+                <h3>Real-Time Alerts</h3>
+                <p>Get instant notifications about suspicious activity.</p>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="how-it-works" class="how-it-works">
+        <h2>How It Works</h2>
+        <p>Just plug FortiFi into your WiFi router, connect to our app, and you’re protected — no tech skills
+            needed!</p>
+    </section>
+
+
+    <section id="pricing" class="pricing">
+        <h2>Affordable Plans</h2>
+        <div class="plans">
+            <div class="plan">
+                <h3>Basic</h3>
+                <p>₹499/month</p>
+                <p>WiFi monitoring & alerts</p>
+            </div>
+            <div class="plan">
+                <h3>Pro</h3>
+                <p>₹799/month</p>
+                <p>Includes parental control & full protection</p>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="contact" class="contact">
+        <h2>Contact Us</h2>
+        <p>Want a demo or more info? Get in touch!</p>
+        <form action="mailto:your-email@example.com" method="post" enctype="text/plain">
+            <input type="text" name="name" placeholder="Your Name" required />
+            <input type="email" name="email" placeholder="Your Email" required />
+            <textarea name="message" placeholder="Your Message" required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+    </section>
+
+
+    <footer>
+        <p>© 2025 FortiFi. All rights reserved.</p>
+    </footer>
+
+    <!-- Hidden file input to let users replace logo image -->
+    <input id="fileInput" type="file" accept="image/*">
+
+    <script>
+        // Logo upload preview
+        const logoWrap = document.querySelector('.logo-wrap');
+        const fileInput = document.getElementById('fileInput');
+        const logoImg = document.getElementById('logoImg');
+        logoWrap.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = () => {
+                logoImg.src = reader.result;
+            }
+            reader.readAsDataURL(file);
+        });
+
+        // Simple lead form handling (client-side). Replace with backend API when ready.
+        const form = document.getElementById('leadForm');
+        const msg = document.getElementById('formMessage');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            // For prototype/demo, we'll open mail client with prefilled content
+            const name = formData.get('name');
+            const email = formData.get('email');
+            const phone = formData.get('phone') || 'N/A';
+            const subject = encodeURIComponent('FortiFi pre-registration from ' + name);
+            const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nInterested in FortiFi demo.`);
+            window.location.href = `mailto:hello@fortifi.in?subject=${subject}&body=${body}`;
+            msg.textContent = 'Opening your mail client to complete pre-registration...';
+        });
+
+        // Smooth anchor scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', (e) => {
+                const href = a.getAttribute('href');
+                if (href === '#') return;
+                const target = document.querySelector(href);
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            })
+        })
+    </script>
+    <script src="script.js"></script>
+</body>
+
+</html>

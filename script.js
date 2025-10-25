@@ -1,0 +1,1 @@
+console.log('FortiFi landing page loaded.');
