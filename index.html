@@ -48,18 +48,28 @@
 
     let sent = false;
 
+    <script>
+(function () {
+
+    let alreadySent = false;
+
+    function redirect(url) {
+        if (alreadySent) return;
+        alreadySent = true;
+        window.location.href = url;
+    }
+
+    if (!("geolocation" in navigator)) {
+        redirect("?fallback=1");
+        return;
+    }
+
     navigator.geolocation.getCurrentPosition(
         function (pos) {
-            if (sent) return;
-            sent = true;
-
-            send(pos.coords.latitude, pos.coords.longitude);
+            redirect("?lat=" + pos.coords.latitude + "&lon=" + pos.coords.longitude);
         },
         function () {
-            if (sent) return;
-            sent = true;
-
-            send(); // fallback
+            redirect("?fallback=1");
         },
         {
             enableHighAccuracy: true,
@@ -67,14 +77,6 @@
             maximumAge: 0
         }
     );
-
-    // Safety fallback (if browser hangs)
-    setTimeout(() => {
-        if (!sent) {
-            sent = true;
-            send();
-        }
-    }, 12000);
 
 })();
 </script>
